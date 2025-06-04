@@ -1,0 +1,3 @@
+displayName = Npc item finder
+author = real yuuko
+version = 0.1
