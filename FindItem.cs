@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Humanizer;
 using log4net.Repository.Hierarchy;
 using Terraria;
 using Terraria.GameContent;
@@ -13,6 +14,7 @@ namespace NpcItemFinder
     {
         public override string Command => "findItem";
         public override string Usage => "Find which NPC sells an item. I.E. /findItem Copper Shortsword";
+        public override string Description => "Find which npc sells I item using Levenshtein fuzzy searching.";
         public override CommandType Type => CommandType.Chat;
         public override void Action(CommandCaller caller, string input, string[] args)
         {
@@ -24,6 +26,17 @@ namespace NpcItemFinder
                 return;
             }
             caller.Reply($"Searching for {itemName}");
+            var results = SearchItem(itemName);
+            foreach (var key in results.Keys)
+            {
+                caller.Reply($"Npc: {key} has the item: {results[key].Name}");
+            }
+
+        }
+        public static Dictionary<string, Item> SearchItem(string item)
+        {
+            Dictionary<string, Item> resultItems = [];
+            Dictionary<string, List<Item>> currentItems = [];
             foreach (NPC npc in Main.npc)
             {
                 string NpcName = Lang.GetNPCName(npc.type).ToString();
@@ -31,9 +44,14 @@ namespace NpcItemFinder
                 {
                     foreach (var entry in shop.ActiveEntries)
                     {
-                        if (entry.Item.Name.Contains(itemName.ToLower(), StringComparison.OrdinalIgnoreCase))
+                        if (currentItems.Keys.Contains(NpcName))
                         {
-                            caller.Reply($"{npc.FullName} has {entry.Item.Name} [i:{entry.Item.type}]");
+                            currentItems[NpcName].Add(entry.Item);
+                        }
+
+                        else
+                        {
+                            currentItems.Add(NpcName, [entry.Item]);
                         }
                     }
                 }
@@ -43,11 +61,30 @@ namespace NpcItemFinder
                     continue;
                 }
             }
+            List<string> currentItemNames = [];
+            foreach (string key in currentItems.Keys)
+            {
+                foreach (var i in currentItems[key])
+                {
+                    currentItemNames.Add(i.Name);
+                }
+            }
+            List<string> matchingItemNames = Util.FuzzySearch(item, currentItemNames.ToArray(), 0.3f, 2, 4);
+            foreach (string key in currentItems.Keys)
+            {
+                foreach (var i in currentItems[key])
+                {
+                    if (matchingItemNames.Contains(i.Name))
+                    {
+                        resultItems.Add(key, i);
+                    }
+                }
 
+            }
 
-
-
+            return resultItems;
         }
+
 
     }
 }
