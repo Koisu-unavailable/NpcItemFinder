@@ -7,6 +7,11 @@ namespace NpcItemFinder
 {
     public class Util
     {
+        public static int[] ConvertCopperToCoins(int copper)
+        {
+            // TODO: Implment
+            throw new NotImplementedException();
+        }
         public static List<string> FuzzySearch(
             string searchItem,
             string[] itemsToBeSearched,
@@ -17,17 +22,25 @@ namespace NpcItemFinder
             List<string> matches = [];
             foreach (string item in itemsToBeSearched)
             {
-                if (item.Length <= maxiumLengthForCharacterDifference)
+                if (searchItem.Length <= maxiumLengthForCharacterDifference)
                 {
-                    if (GetDifference(searchItem, item, false) <= thresholdCharacters)
+                    Console.WriteLine("AHHH");
+                    Console.WriteLine(item.Contains(searchItem));
+                    Console.WriteLine(item);
+                    Console.WriteLine(searchItem);
+                    Console.WriteLine(GetDifference(searchItem.ToLower(), item.ToLower(), false));
+                    if ((GetDifference(searchItem.ToLower(), item.ToLower(), false) <= thresholdCharacters) || item.ToLower().Contains(searchItem.ToLower()))
                     {
+                        Console.WriteLine(item);
                         matches.Add(item);
                     }
                 }
                 else
                 {
-                    if (GetDifference(searchItem, item, true) <= thresholdPercent)
+                    Console.WriteLine("LONG");
+                    if ((GetDifference(searchItem.ToLower(), item.ToLower(), true) <= thresholdPercent) || item.Contains(searchItem))
                     {
+                        Console.WriteLine(item);
                         matches.Add(item);
                     }
                 }
@@ -41,7 +54,7 @@ namespace NpcItemFinder
         /// <param name="str2"></param>
         /// <param name="Threshhold">If this is set to true, the function will return the percent difference rather than the amount of characters different</param>
         /// <returns>The difference between the 2 strings or the amount of characters, depending on what you specified.</returns>
-        private static float GetDifference(string str1, string str2, bool Threshhold)
+        private static float GetDifference(string str1, string str2)
         {
             if (str1 == str2)
             {
@@ -49,7 +62,6 @@ namespace NpcItemFinder
             }
 
             int amountDifferent = 0;
-            float percent = 0f;
             string largerStr = str1.Length > str2.Length ? str1 : str2;
             string shorterStr = str1.Length < str2.Length ? str1 : str2;
             if (str1.Length == str2.Length)
@@ -67,16 +79,7 @@ namespace NpcItemFinder
                 }
             }
             amountDifferent += Math.Abs(str1.Length - str2.Length);
-            
-            if (Threshhold == true)
-            {
-                return amountDifferent / (float)largerStr.Length;
-            }
-            else
-            {
-                return amountDifferent;
-            }
-
+            return amountDifferent;
 
         }
     }
