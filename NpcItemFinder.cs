@@ -14,7 +14,7 @@ namespace NpcItemFinder
 		static public Dictionary<string, NPCShop> shops = [];
 		public override void Load()
 		{
-			Console.WriteLine($"Detected town NPC shops: {shops}");
+			
         }
 	}
 }

@@ -19,7 +19,7 @@ class AddShopTracker : GlobalNPC
         try
         {
             NpcItemFinder.shops.Add(NpcName, shop);
-            Console.WriteLine($"Added shop: {shop.Entries} for npc {NpcName}");
+            Mod.Logger.Info($"Added shop: {shop.Entries} for npc {NpcName}");
         }
         catch (ArgumentException)
         {

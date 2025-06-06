@@ -9,8 +9,27 @@ namespace NpcItemFinder
     {
         public static int[] ConvertCopperToCoins(int copper)
         {
-            // TODO: Implment
-            throw new NotImplementedException();
+            
+            int platinum;
+            int gold;
+            int silver;
+            int copperrChange;
+            platinum = copper / 1000000;
+
+            copper -= platinum * 1000000;
+
+            gold = copper / 10000;
+
+            copper -= gold * 10000;
+
+            silver = copper / 100;
+
+            copper -= silver * 100;
+ 
+            copperrChange = copper;
+           
+            
+            return [platinum, gold, silver, copperrChange];
         }
         public static List<string> FuzzySearch(
             string searchItem,

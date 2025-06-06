@@ -110,9 +110,9 @@ namespace NpcItemFinder
                     currentItemNames.Add(i.Name);
                 }
             }
-            Console.WriteLine(currentItemNames.Count);
+            
             List<string> matchingItemNames = Util.FuzzySearch(item, currentItemNames.ToArray(), 3);
-            matchingItemNames.ForEach(e => Console.WriteLine(e));
+            
             foreach (string key in currentItems.Keys)
             {
                 foreach (var i in currentItems[key])
