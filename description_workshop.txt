@@ -4,7 +4,7 @@ Doing /findItem [item] will try to find which NPC sells the item.
 # Examples: 
 - "/findItem bubble"
 - "/findItem Copper Shortsword"
-# Features to add:
+# Upcoming features:
 - A ui
 
 # Feature Requests, Bugs, etc.:

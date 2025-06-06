@@ -1,3 +1,9 @@
 This is a mod to help find items that NPCS sell.
 
 Doing /findItem [item] will try to find which NPC sells the item.
+
+
+Upcoming features: A ui.
+
+Feature Requests, Bugs, etc.:
+https://github.com/Koisu-unavailable/NpcItemFinder
