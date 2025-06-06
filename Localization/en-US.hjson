@@ -1,0 +1,15 @@
+Mods: {
+	NpcItemFinder: {
+		Configs: {
+			NpcItemFinderConfig: {
+				DisplayName: Npc Item Finder Config
+				Headers.findItemHeader: find Item Header Header
+
+				ItemDisplayLimit: {
+					Label: Item Display Limit
+					Tooltip: ""
+				}
+			}
+		}
+	}
+}
