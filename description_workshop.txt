@@ -1,1 +1,4 @@
-This description will show up on the steam page, check out https://steamcommunity.com/comment/Guide/formattinghelp.
+This is a mod to help find items that NPCS sell.
+
+Doing /findItem [item] will try to find which NPC sells the item.
+Example: "/findItem 
