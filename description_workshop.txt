@@ -1,5 +1,13 @@
 This is a mod to help find items that NPCS sell.
 
 Doing /findItem [item] will try to find which NPC sells the item.
-Examples: "/findItem bubble", "/findItem Copper Shortsword"
+# Examples: 
+- "/findItem bubble"
+- "/findItem Copper Shortsword"
+# Features to add:
+- A ui
+
+# Feature Requests, Bugs, etc.:
+https://github.com/Koisu-unavailable/NpcItemFinder
+
 
