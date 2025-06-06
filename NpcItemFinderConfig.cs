@@ -11,8 +11,7 @@ class NpcItemFinderConfig : ModConfig
 {
     public override ConfigScope Mode => ConfigScope.ClientSide;
 
-    [Header("/findItem Command")]
+    [Header("findItemHeader")]
     [DefaultValue(10)]
-    [Description("The limit on how many items to display.")]
     public int ItemDisplayLimit;
 }

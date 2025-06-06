@@ -15,35 +15,27 @@ namespace NpcItemFinder
         public static List<string> FuzzySearch(
             string searchItem,
             string[] itemsToBeSearched,
-            float thresholdPercent,
-            int thresholdCharacters,
-            int maxiumLengthForCharacterDifference)
+            int thresholdCharacters)
         {
             List<string> matches = [];
             foreach (string item in itemsToBeSearched)
             {
-                if (searchItem.Length <= maxiumLengthForCharacterDifference)
+                int difference = GetDifference(searchItem.ToLower(), item.ToLower());
+                if (item.Contains(searchItem, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    Console.WriteLine("AHHH");
-                    Console.WriteLine(item.Contains(searchItem));
-                    Console.WriteLine(item);
-                    Console.WriteLine(searchItem);
-                    Console.WriteLine(GetDifference(searchItem.ToLower(), item.ToLower(), false));
-                    if ((GetDifference(searchItem.ToLower(), item.ToLower(), false) <= thresholdCharacters) || item.ToLower().Contains(searchItem.ToLower()))
-                    {
-                        Console.WriteLine(item);
-                        matches.Add(item);
-                    }
+                    matches.Add(item);
+                    continue;
                 }
-                else
+                if (difference <= searchItem.Length)
                 {
-                    Console.WriteLine("LONG");
-                    if ((GetDifference(searchItem.ToLower(), item.ToLower(), true) <= thresholdPercent) || item.Contains(searchItem))
-                    {
-                        Console.WriteLine(item);
-                        matches.Add(item);
-                    }
+                    continue;
                 }
+                if (difference <= thresholdCharacters)
+                {
+                    matches.Add(item);
+                    continue;
+                }
+
             }
             return matches;
         }
@@ -54,11 +46,11 @@ namespace NpcItemFinder
         /// <param name="str2"></param>
         /// <param name="Threshhold">If this is set to true, the function will return the percent difference rather than the amount of characters different</param>
         /// <returns>The difference between the 2 strings or the amount of characters, depending on what you specified.</returns>
-        private static float GetDifference(string str1, string str2)
+        public static int GetDifference(string str1, string str2)
         {
             if (str1 == str2)
             {
-                return 0f;
+                return 0;
             }
 
             int amountDifferent = 0;
