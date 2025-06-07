@@ -8,19 +8,22 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-
 namespace NpcItemFinder
 {
     public class FindItem : ModCommand
     {
         public override string Command => "findItem";
-        public override string Usage => "Find which NPC sells an item. I.E. /findItem Copper Shortsword.";
+        public override string Usage =>
+            "Find which NPC sells an item. I.E. /findItem Copper Shortsword.";
         public override string Description => "Find which npc sells an item.";
         public override CommandType Type => CommandType.Chat;
+
         public override void Action(CommandCaller caller, string input, string[] args)
         {
             string itemName = string.Join(" ", input.Split(' ')[1..]);
-            Mod.Logger.InfoFormat($"\"{caller.Player.name}\" inputted: \"{input}\", searching for \"{itemName}\"");
+            Mod.Logger.InfoFormat(
+                $"\"{caller.Player.name}\" inputted: \"{input}\", searching for \"{itemName}\""
+            );
             if (args.Length == 0)
             {
                 caller.Reply("Please put an item name. There can be spaces.");
@@ -30,8 +33,14 @@ namespace NpcItemFinder
             var results = SearchItem(itemName);
             if (results.Count >= ModContent.GetInstance<NpcItemFinderConfig>().ItemDisplayLimit)
             {
-                caller.Reply($"Showing {ModContent.GetInstance<NpcItemFinderConfig>().ItemDisplayLimit} items of {results.Count} total items found . This can be changed in the mod's config.");
-                results = TrimResults(results, itemName, ModContent.GetInstance<NpcItemFinderConfig>().ItemDisplayLimit);
+                caller.Reply(
+                    $"Showing {ModContent.GetInstance<NpcItemFinderConfig>().ItemDisplayLimit} items of {results.Count} total items found . This can be changed in the mod's config."
+                );
+                results = TrimResults(
+                    results,
+                    itemName,
+                    ModContent.GetInstance<NpcItemFinderConfig>().ItemDisplayLimit
+                );
             }
             if (!results.Any())
             {
@@ -45,16 +54,23 @@ namespace NpcItemFinder
                     caller.Reply($"Npc: {key} has the item: {i.Name} [i:{i.type}]");
                 }
             }
-
         }
-        private static Dictionary<string, List<Item>> TrimResults(Dictionary<string, List<Item>> dict, string searchedItem, int trimTo)
+
+        private static Dictionary<string, List<Item>> TrimResults(
+            Dictionary<string, List<Item>> dict,
+            string searchedItem,
+            int trimTo
+        )
         {
             Dictionary<Tuple<string, Item>, int> differences = [];
             foreach (string key in dict.Keys)
             {
                 foreach (Item item in dict[key])
                 {
-                    int difference = Util.GetDifference(item.Name.ToLower(), searchedItem.ToLower());
+                    int difference = Util.GetDifference(
+                        item.Name.ToLower(),
+                        searchedItem.ToLower()
+                    );
                     differences[new Tuple<string, Item>(key, item)] = difference;
                 }
             }
@@ -74,6 +90,7 @@ namespace NpcItemFinder
             }
             return result;
         }
+
         public static Dictionary<string, List<Item>> SearchItem(string item)
         {
             Dictionary<string, List<Item>> resultItems = [];
@@ -89,14 +106,12 @@ namespace NpcItemFinder
                         {
                             currentItems[NpcName].Add(entry.Item);
                         }
-
                         else
                         {
                             currentItems.Add(NpcName, [entry.Item]);
                         }
                     }
                 }
-
                 else
                 {
                     continue;
@@ -110,9 +125,9 @@ namespace NpcItemFinder
                     currentItemNames.Add(i.Name);
                 }
             }
-            
+
             List<string> matchingItemNames = Util.FuzzySearch(item, currentItemNames.ToArray(), 3);
-            
+
             foreach (string key in currentItems.Keys)
             {
                 foreach (var i in currentItems[key])
@@ -127,18 +142,10 @@ namespace NpcItemFinder
                         {
                             resultItems.Add(key, [i]);
                         }
-
-
                     }
-
-
                 }
             }
             return resultItems;
         }
-
-
     }
-
-
 }
