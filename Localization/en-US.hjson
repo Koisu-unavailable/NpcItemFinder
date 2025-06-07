@@ -11,5 +11,7 @@ Mods: {
 				}
 			}
 		}
+
+		Keybinds.OpenCommand.DisplayName: Open Command
 	}
 }
