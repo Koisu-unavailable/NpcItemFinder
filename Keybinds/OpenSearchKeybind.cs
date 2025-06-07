@@ -9,7 +9,7 @@ class OpenSearchKeybind : ModSystem
 
     public override void Load()
     {
-        OpenCommand = KeybindLoader.RegisterKeybind(Mod, "OpenCommand", "I");
+        OpenCommand = KeybindLoader.RegisterKeybind(Mod, "OpenCommand", "F");
     }
 
     public override void Unload()

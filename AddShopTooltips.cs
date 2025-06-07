@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
-
 namespace NpcItemFinder;
 
 class AddShopTooltips : GlobalItem
@@ -36,8 +35,14 @@ class AddShopTooltips : GlobalItem
                         costStr += $"{cost[3]} [i:71]";
                     }
 
-
-                    tooltips.Add(new TooltipLine(Mod, "whoSoldBy", $"[c/FFF014:Sold by: {key} for (withhout factroing happiniess or other discounts/increases)] " + costStr)); // Copper coin is item id 71
+                    tooltips.Add(
+                        new TooltipLine(
+                            Mod,
+                            "whoSoldBy",
+                            $"[c/FFF014:Sold by: {key} for (withhout factroing happiniess or other discounts/increases)] "
+                                + costStr
+                        )
+                    ); // Copper coin is item id 71
                 }
             }
         }
