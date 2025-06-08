@@ -1,5 +1,5 @@
 displayName = Npc item finder
 author = real yuuko
-version = 0.3.0
+version = 0.3.0.1
 
 weakReferences = FindMyNPCs@0.1.1
