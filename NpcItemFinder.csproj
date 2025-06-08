@@ -5,14 +5,18 @@
 
 	<!-- General -->
 	<PropertyGroup>
-		
+
 	</PropertyGroup>
 
 	<!-- References -->
 	<ItemGroup>
-		
+
 	</ItemGroup>
+
 	<ItemGroup>
+		<Reference Include="FindMyNPCs">
+			<HintPath>./lib/FindMyNPCs.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 </Project>

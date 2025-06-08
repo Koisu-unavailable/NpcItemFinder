@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FindMyNPCs.Core;
 using Humanizer;
 using log4net.Repository.Hierarchy;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -17,6 +19,8 @@ namespace NpcItemFinder
             "Find which NPC sells an item. I.E. /findItem Copper Shortsword.";
         public override string Description => "Find which npc sells an item.";
         public override CommandType Type => CommandType.Chat;
+
+        
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
@@ -54,6 +58,43 @@ namespace NpcItemFinder
                     caller.Reply($"Npc: {key} has the item: {i.Name} [i:{i.type}]");
                 }
             }
+            if (ModLoader.HasMod("FindMyNPCs"))
+            {
+                if (results.Count == 1)
+                {
+                    NPC npc = GetNpcFromName(results.Keys.ToArray()[0]);
+                    if (npc == null)
+                    {
+
+                        return;
+                    }
+                    
+                    addArrow(npc);
+                }
+            }
+        }
+
+        [JITWhenModsEnabled("FindMyNPCs")]
+        private void addArrow(NPC npc)
+        {
+            ModContent.GetInstance<ArrowSystem>().SetTargetNPC(npc);
+        }
+
+        private static NPC GetNpcFromName(string name)
+        {
+            foreach (NPC npc in Main.npc)
+            {
+                if (
+                    npc.active
+                    && Lang.GetNPCName(npc.type)
+                        .ToString()
+                        .Equals(name, StringComparison.OrdinalIgnoreCase)
+                )
+                {
+                    return npc;
+                }
+            }
+            return null;
         }
 
         private static Dictionary<string, List<Item>> TrimResults(
