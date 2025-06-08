@@ -20,8 +20,6 @@ namespace NpcItemFinder
         public override string Description => "Find which npc sells an item.";
         public override CommandType Type => CommandType.Chat;
 
-        
-
         public override void Action(CommandCaller caller, string input, string[] args)
         {
             string itemName = string.Join(" ", input.Split(' ')[1..]);
@@ -65,10 +63,9 @@ namespace NpcItemFinder
                     NPC npc = GetNpcFromName(results.Keys.ToArray()[0]);
                     if (npc == null)
                     {
-
                         return;
                     }
-                    
+
                     addArrow(npc);
                 }
             }
