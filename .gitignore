@@ -135,3 +135,4 @@ _NCrunch*
 *.pixil
 .vscode*
 lib/
+Properties/

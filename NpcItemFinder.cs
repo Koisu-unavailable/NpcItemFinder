@@ -12,9 +12,5 @@ namespace NpcItemFinder
 	public class NpcItemFinder : Mod
 	{
 		static public Dictionary<string, NPCShop> shops = [];
-		public override void Load()
-		{
-			
-        }
 	}
 }

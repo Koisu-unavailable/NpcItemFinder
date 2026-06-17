@@ -32,7 +32,7 @@ class AddShopTooltips : GlobalItem
                     }
                     if (cost[3] != 0)
                     {
-                        costStr += $"{cost[3]} [i:71]";
+                        costStr += $"{cost[3]} [i:71]"; // Copper coin is item id 71
                     }
 
                     tooltips.Add(
@@ -42,7 +42,7 @@ class AddShopTooltips : GlobalItem
                             $"[c/FFF014:Sold by: {key} for (withhout factroing happiniess or other discounts/increases)] "
                                 + costStr
                         )
-                    ); // Copper coin is item id 71
+                    ); 
                 }
             }
         }
