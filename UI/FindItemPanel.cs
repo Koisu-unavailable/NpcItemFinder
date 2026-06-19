@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
@@ -9,8 +10,23 @@ namespace NpcItemFinder.UI;
 public class FindItemPanel : UIPanel
 {
     private Vector2 offset;
+
     // A flag that checks if the panel is currently being dragged
     private bool dragging;
+    private SearchBar searchBar;
+
+    public override void OnInitialize()
+    {
+        base.OnInitialize();
+        searchBar = new SearchBar();
+        searchBar.Width.Set(Width.Pixels - SearchBar.xPad * 2, 0); // times 2 accounts for left/right pad
+        searchBar.Left.Set(SearchBar.xPad, 0);
+        var textHeight = FontAssets.MouseText.Value.MeasureString(searchBar.hint).Y;
+        searchBar.Height.Set(textHeight + SearchBar.hintYpad * 2, 0); // times two accounts for bottom and top padding
+        searchBar.MarginBottom = SearchBar.yPad;
+        searchBar.Top.Set(SearchBar.yPad, 0);
+        Append(searchBar);
+    }
 
     public override void LeftMouseDown(UIMouseEvent evt)
     {
@@ -81,7 +97,6 @@ public class FindItemPanel : UIPanel
             Top.Pixels = Utils.Clamp(Top.Pixels, 0, parentSpace.Bottom - Height.Pixels);
             // Recalculate forces the UI system to do the positioning math again.
             Recalculate();
-
         }
     }
 }

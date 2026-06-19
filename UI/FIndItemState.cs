@@ -1,5 +1,8 @@
 using Terraria;
+using Terraria.GameContent;
+using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
+
 namespace NpcItemFinder.UI
 {
     public class FindItemState : UIState
@@ -12,16 +15,10 @@ namespace NpcItemFinder.UI
 
             Append(findItemPanel);
             findItemPanel.SetPadding(0);
-            SetRectangle(findItemPanel, left: 400f, top: 100f, width: 170f, height: 70f);
+            findItemPanel.Width.Set(400f, 0);
+            findItemPanel.Height.Set(200f, 0);
+            findItemPanel.HAlign = 0.5f;
+            findItemPanel.VAlign = 0.3f;
         }
-        private void SetRectangle(UIElement uiElement, float left, float top, float width, float height)
-        {
-            uiElement.Left.Set(left, 0f);
-            uiElement.Top.Set(top, 0f);
-            uiElement.Width.Set(width, 0f);
-            uiElement.Height.Set(height, 0f);
-        }
-
-
     }
 }
