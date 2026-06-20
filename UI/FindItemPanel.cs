@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.UI;
 
 namespace NpcItemFinder.UI;
@@ -15,6 +16,7 @@ public class FindItemPanel : UIPanel
     private bool dragging;
     private SearchBar searchBar;
 
+
     public override void OnInitialize()
     {
         base.OnInitialize();
@@ -26,6 +28,9 @@ public class FindItemPanel : UIPanel
         searchBar.MarginBottom = SearchBar.yPad;
         searchBar.Top.Set(SearchBar.yPad, 0);
         Append(searchBar);
+        
+        var item_container  = new ItemContainer(new Item(ItemID.SoulofNight));
+        Append(item_container);
     }
 
     public override void LeftMouseDown(UIMouseEvent evt)
