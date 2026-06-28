@@ -50,14 +50,17 @@ namespace NpcItemFinder.UI
             {
                 texture = ModContent.Request<Texture2D>(modItem.Texture);
             }
-            try
-            {
-                drawAnimation = Main.itemAnimations[item.type];
-                animated = true;
-            }
-            catch (IndexOutOfRangeException)
+            drawAnimation = Main.itemAnimations[item.type];
+            animated = true;
+            if (drawAnimation == null)
             {
                 animated = false;
+            }
+            if (animated) { }
+            else
+            {
+                Width.Set(50, 0);
+                Height.Set(50, 0);
             }
         }
 
@@ -75,14 +78,30 @@ namespace NpcItemFinder.UI
             ModItem? modItem = item.ModItem;
             if (modItem == null) // pretty sure all vanilla items are vertically animated
             {
+                // if (drawAnimation.FrameCounter > drawAnimation.FrameCount)
+                // {
+                //     drawAnimation.FrameCounter = 0;
+                // }
                 var frame = texture.Frame(
                     1,
                     drawAnimation.FrameCount,
                     0,
                     drawAnimation.FrameCounter
                 );
-                drawAnimation.FrameCounter++;
-                spriteBatch.Draw(texture.Value, dimensions.Center(), frame, Color.White);
+                drawAnimation.FrameCounter =
+                    (int)(Main.GameUpdateCount / drawAnimation.TicksPerFrame)
+                    % drawAnimation.FrameCount;
+                // drawAnimation.FrameCounter++;
+                spriteBatch.Draw(
+                    texture.Value,
+                    dimensions.ToRectangle(),
+                    frame,
+                    Color.White,
+                    0f,
+                    new Vector2(texture.Width() / 2, texture.Height() / 2),
+                    SpriteEffects.None,
+                    0
+                );
             }
             else
             {

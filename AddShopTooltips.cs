@@ -39,7 +39,7 @@ class AddShopTooltips : GlobalItem
                         new TooltipLine(
                             Mod,
                             "whoSoldBy",
-                            $"[c/FFF014:Sold by: {key} for (withhout factroing happiniess or other discounts/increases)] "
+                            $"[c/FFF014:Sold by: {key} for around] "
                                 + costStr
                         )
                     ); 

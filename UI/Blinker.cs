@@ -4,6 +4,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
 namespace NpcItemFinder.UI;
+
 public class Blinker(string oldText) : UIElement
 {
     private UIText blinker;

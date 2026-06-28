@@ -16,7 +16,6 @@ public class FindItemPanel : UIPanel
     private bool dragging;
     private SearchBar searchBar;
 
-
     public override void OnInitialize()
     {
         base.OnInitialize();
@@ -28,8 +27,8 @@ public class FindItemPanel : UIPanel
         searchBar.MarginBottom = SearchBar.yPad;
         searchBar.Top.Set(SearchBar.yPad, 0);
         Append(searchBar);
-        
-        var item_container  = new ItemContainer(new Item(ItemID.SoulofNight));
+
+        var item_container = new ItemContainer(new Item(ItemID.IronAnvil));
         Append(item_container);
     }
 

@@ -12,6 +12,9 @@ Mods: {
 			}
 		}
 
-		Keybinds.OpenCommand.DisplayName: Open Command
+		Keybinds: {
+			OpenCommand.DisplayName: Open Command
+			OpenFindUi.DisplayName: Open UI
+		}
 	}
 }
