@@ -66,14 +66,12 @@ namespace NpcItemFinder.UI
 
         private void DrawNotAnimated(SpriteBatch spriteBatch)
         {
-            base.DrawSelf(spriteBatch);
             CalculatedStyle dimensions = GetDimensions();
             spriteBatch.Draw(texture.Value, dimensions.Center(), Color.White);
         }
 
         private void DrawAnimated(SpriteBatch spriteBatch)
         {
-            base.DrawSelf(spriteBatch);
             CalculatedStyle dimensions = GetDimensions();
             ModItem? modItem = item.ModItem;
             if (modItem == null) // pretty sure all vanilla items are vertically animated
@@ -119,6 +117,7 @@ namespace NpcItemFinder.UI
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
+            base.DrawSelf(spriteBatch);
             if (animated)
             {
                 DrawAnimated(spriteBatch);
