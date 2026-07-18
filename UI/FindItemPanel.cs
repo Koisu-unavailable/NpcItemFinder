@@ -28,7 +28,7 @@ public class FindItemPanel : UIPanel
         searchBar.Top.Set(SearchBar.yPad, 0);
         Append(searchBar);
 
-        var item_container = new ItemContainer(new Item(ItemID.IronAnvil));
+        var item_container = new ItemContainer(new Item(ItemID.SoulofFlight));
         Append(item_container);
     }
 

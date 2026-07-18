@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
@@ -18,7 +19,7 @@ namespace NpcItemFinder.UI
 {
     public class ItemContainer(Item item) : UIPanel
     {
-        private readonly Item item = item;
+        private Item item = item;
 
         Asset<Texture2D> texture;
         private static Item[] allAvailbleItems; // static to save memory
@@ -62,69 +63,66 @@ namespace NpcItemFinder.UI
                 Width.Set(50, 0);
                 Height.Set(50, 0);
             }
-        }
-
-        private void DrawNotAnimated(SpriteBatch spriteBatch)
-        {
-            CalculatedStyle dimensions = GetDimensions();
-            spriteBatch.Draw(texture.Value, dimensions.Center(), Color.White);
-        }
-
-        private void DrawAnimated(SpriteBatch spriteBatch)
-        {
-            CalculatedStyle dimensions = GetDimensions();
-            ModItem? modItem = item.ModItem;
-            if (modItem == null) // pretty sure all vanilla items are vertically animated
-            {
-                // if (drawAnimation.FrameCounter > drawAnimation.FrameCount)
-                // {
-                //     drawAnimation.FrameCounter = 0;
-                // }
-                var frame = texture.Frame(
-                    1,
-                    drawAnimation.FrameCount,
-                    0,
-                    drawAnimation.FrameCounter
-                );
-                drawAnimation.FrameCounter =
-                    (int)(Main.GameUpdateCount / drawAnimation.TicksPerFrame)
-                    % drawAnimation.FrameCount;
-                // drawAnimation.FrameCounter++;
-                spriteBatch.Draw(
-                    texture.Value,
-                    dimensions.ToRectangle(),
-                    frame,
-                    Color.White,
-                    0f,
-                    new Vector2(texture.Width() / 2, texture.Height() / 2),
-                    SpriteEffects.None,
-                    0
-                );
-            }
-            else
-            {
-                modItem.PreDrawInInventory(
-                    spriteBatch,
-                    dimensions.Center(),
-                    dimensions.ToRectangle(),
-                    Color.White,
-                    Color.White,
-                    new Vector2(0),
-                    1
-                ); // some of them might be horizobntal, dont wnatr to deal with that
-            }
+            Width.Set(50, 0);
+            Height.Set(50, 0);
+            Recalculate();
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            base.DrawSelf(spriteBatch);
-            if (animated)
+            CalculatedStyle dimensions = GetDimensions();
+            ModItem? modItem = item.ModItem;
+            Main.instance.LoadItem(item.type);
+
+            Texture2D texture = TextureAssets.Item[item.type].Value;
+
+            // Handles animated items
+            Rectangle frame =
+                Main.itemAnimations[item.type] != null
+                    ? Main.itemAnimations[item.type].GetFrame(texture)
+                    : texture.Frame();
+
+            // Scale so the item fits within the panel
+            float scale = Math.Min(
+                Width.Pixels / ((float)frame.Width + 10),
+                Height.Pixels / ((float)frame.Height + 10)
+            // +10 for padding
+            );
+
+            Vector2 drawPos =
+                dimensions.Position() + new Vector2(Width.Pixels / 2f, Height.Pixels / 2f);
+            bool drawSprite = true;
+            if (!(modItem == null))
             {
-                DrawAnimated(spriteBatch);
+                drawSprite = ItemLoader.PreDrawInInventory(
+                    modItem.Item,
+                    spriteBatch,
+                    drawPos,
+                    dimensions.ToRectangle(),
+                    Color.White,
+                    Color.White,
+                    dimensions.Center(),
+                    scale
+                );
             }
-            else
+            if (drawSprite)
             {
-                DrawNotAnimated(spriteBatch);
+                spriteBatch.Draw(
+                    texture,
+                    drawPos,
+                    frame,
+                    Color.White,
+                    0f,
+                    frame.Size() / 2f,
+                    scale,
+                    SpriteEffects.None,
+                    0f
+                );
+                if (ContainsPoint(Main.MouseScreen))
+                {
+                    Main.HoverItem = item.Clone();
+                    Main.hoverItemName = item.Name;
+                }
             }
         }
     }

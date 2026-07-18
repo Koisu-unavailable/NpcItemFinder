@@ -8,4 +8,5 @@
 - Add a U.I.
 - Filtering by mod
 - better search for FindItem
+- add calling Itremloader.PostDraw nd Predraw for all items in item containere
 
