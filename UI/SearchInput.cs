@@ -12,7 +12,7 @@ namespace NpcItemFinder.UI;
 public class SearchBar : UIPanel
 {
     private bool focused = false;
-    public readonly string hint = "PLACEHOLDER"; // TODO: add localization
+    public readonly string hint = "Copper Shortsword"; // TODO: add localization
 
     private UIText textElement;
     private Blinker blinker;
@@ -29,11 +29,12 @@ public class SearchBar : UIPanel
     public override void OnInitialize()
     {
         base.OnInitialize();
+        BorderColor = Color.Black;
         textElement = new UIText(hint)
         {
             TextColor = Color.Gray,
             HAlign = 0.05f,
-            VAlign = 0.5f
+            VAlign = 0.5f,
         };
         Append(textElement);
         blinker = new Blinker("");

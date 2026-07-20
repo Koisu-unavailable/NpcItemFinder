@@ -16,22 +16,24 @@ namespace NpcItemFinder.UI;
 public class FindItemPanel : UIPanel
 {
     private Vector2 offset;
-
-    // A flag that checks if the panel is currently being dragged
     private bool dragging;
     private SearchBar searchBar;
     private UIText placeholderItemText;
     private const int PLACEHOLDERITEMTEXTSCALE = 2;
+    private UIButton searchButton;
     private int page = 0;
     private int maxPages = 1;
-    private List<Item> currentlyDisplaying;
-    private UIButton searchButton;
 
-    private const int ITEMCONTAINERXPAD = 5;
+    private List<int> currentlyDisplaying = [];
+
+    // the amount of items that can be displayed per page
+    private int displayAmount;
+    private const int ITEMCONTAINERXPAD = 10; // eyeballed
 
     public override void OnInitialize()
     {
         base.OnInitialize();
+        BackgroundColor = Color.SkyBlue ;
         searchBar = new SearchBar();
         searchBar.Width.Set(Width.Pixels - SearchBar.xPad * 2, 0); // times 2 accounts for left/right pad
         searchBar.Left.Set(SearchBar.xPad, 0);
@@ -59,7 +61,25 @@ public class FindItemPanel : UIPanel
         );
         searchBar.MarginRight = SearchBar.xPad;
         Append(searchButton);
+        displayAmount = (int)(
+            Width.Pixels / (ItemContainer.WIDTH + ITEMCONTAINERXPAD * 2)
+        );
+
+        for (int i = 0; i < displayAmount; i++)
+        {
+            var container = new ItemContainer(new Item())
+            {
+                VAlign = 0.6f,
+            };
+            
+            container.MarginLeft = container.MarginRight = ITEMCONTAINERXPAD;
+            container.Left.Set(i * (Width.Pixels / displayAmount), 0);
+            Append(container);
+            currentlyDisplaying.Add(container.UniqueId);
+        }
+        Recalculate();
     }
+
 
     private void Search(UIMouseEvent evt)
     {
@@ -72,11 +92,6 @@ public class FindItemPanel : UIPanel
         List<Item> items = queryResults.Flatten();
         Main.NewText(items.Count);
         items.ForEach(i => Main.NewText($"[i:{i.type}]"));
-        int displayAmount = (int)(
-            Width.Pixels / (new ItemContainer(new Item()).Width.Pixels + ITEMCONTAINERXPAD * 2)
-        );
-        displayAmount = displayAmount > items.Count ? items.Count : displayAmount;
-        Main.NewText(displayAmount);
         if (items.Count == 0)
         {
             placeholderItemText.SetText("No items found");
@@ -86,20 +101,16 @@ public class FindItemPanel : UIPanel
         {
             placeholderItemText.SetText("");
         }
+        var containers = Children.OfType<ItemContainer>();
         for (int i = 0; i < displayAmount; i++)
         {
-            var container = new ItemContainer(items[(page * displayAmount) + i])
+            int itemIndex = (page * displayAmount) + i;
+            if (itemIndex >= items.Count)
             {
-                VAlign = 0.5f,
-                HAlign = 0.5f
-            };
-            container.Left.Set(
-                i * (container.Width.Pixels + ITEMCONTAINERXPAD)
-                    - (Width.Pixels / 2f)
-                    + (container.Width.Pixels / 2f),
-                0.5f
-            );
-            Append(container);
+                // should attempt to reposition containers to be centered 
+                break;
+            }
+            containers.ElementAt(i).Item = items[itemIndex];
         }
         Recalculate();
     }
@@ -148,7 +159,6 @@ public class FindItemPanel : UIPanel
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-
         // Checking ContainsPoint and then setting mouseInterface to true is very common
         // This causes clicks on this UIElement to not cause the player to use current items
         if (ContainsPoint(Main.MouseScreen))
@@ -176,5 +186,6 @@ public class FindItemPanel : UIPanel
             // Recalculate forces the UI system to do the positioning math again.
             Recalculate();
         }
+        Recalculate();
     }
 }

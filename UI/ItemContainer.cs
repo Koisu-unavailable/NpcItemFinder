@@ -19,28 +19,34 @@ namespace NpcItemFinder.UI
 {
     public class ItemContainer(Item item) : UIPanel
     {
-        private Item item = item;
+        public Item Item { get { return _item; } set { _item = Item; Main.instance.LoadItem(Item.type); } }
+        private Item _item = item;
+
+        public const int WIDTH = 50;
+        public const int HEIGHT = 50;
         public override void OnInitialize()
         {
             base.OnInitialize();
-            BorderColor = Color.Blue;
-            Width.Set(50, 0);
-            Height.Set(50, 0);
+            BorderColor = Color.Black;
+            Width.Set(WIDTH, 0);
+            Height.Set(HEIGHT, 0);
             Recalculate();
+            Main.instance.LoadItem(_item.type);
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
+            base.DrawSelf(spriteBatch);
+            Main.NewText("drawing item: " + _item.type);
             CalculatedStyle dimensions = GetDimensions();
-            ModItem? modItem = item.ModItem;
-            Main.instance.LoadItem(item.type);
+            ModItem? modItem = _item.ModItem;
 
-            Texture2D texture = TextureAssets.Item[item.type].Value;
+            Texture2D texture = TextureAssets.Item[_item.type].Value;
 
             // Handles animated items
             Rectangle frame =
-                Main.itemAnimations[item.type] != null
-                    ? Main.itemAnimations[item.type].GetFrame(texture)
+                Main.itemAnimations[_item.type] != null
+                    ? Main.itemAnimations[_item.type].GetFrame(texture)
                     : texture.Frame();
 
             // Scale so the item fits within the panel
@@ -82,8 +88,8 @@ namespace NpcItemFinder.UI
             }
             if (ContainsPoint(Main.MouseScreen))
             {
-                Main.HoverItem = item.Clone();
-                Main.hoverItemName = item.Name;
+                Main.HoverItem = _item.Clone();
+                Main.hoverItemName = _item.Name;
             }
         }
     }
