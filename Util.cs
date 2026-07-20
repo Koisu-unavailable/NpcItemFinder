@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace NpcItemFinder
 {
-    public class Util
+    public static class Util
     {
         public static int[] ConvertCopperToCoins(int copper)
         {
-            
             int platinum;
             int gold;
             int silver;
@@ -25,16 +24,17 @@ namespace NpcItemFinder
             silver = copper / 100;
 
             copper -= silver * 100;
- 
+
             copperrChange = copper;
-           
-            
+
             return [platinum, gold, silver, copperrChange];
         }
+
         public static List<string> FuzzySearch(
             string searchItem,
             string[] itemsToBeSearched,
-            int thresholdCharacters)
+            int thresholdCharacters
+        )
         {
             List<string> matches = [];
             foreach (string item in itemsToBeSearched)
@@ -54,15 +54,15 @@ namespace NpcItemFinder
                     matches.Add(item);
                     continue;
                 }
-
             }
             return matches;
         }
+
         /// <summary>
         /// Get the difference between 2 strings using Levenshtein algorithim
         /// </summary>
-        /// <param name="str1"></param>
-        /// <param name="str2"></param>
+        /// <param name="str1">1st string</param>
+        /// <param name="str2">2nd string</param>
         /// <param name="Threshhold">If this is set to true, the function will return the percent difference rather than the amount of characters different</param>
         /// <returns>The difference between the 2 strings or the amount of characters, depending on what you specified.</returns>
         public static int GetDifference(string str1, string str2)
@@ -81,7 +81,6 @@ namespace NpcItemFinder
                 shorterStr = str2;
             }
 
-
             foreach (char c in shorterStr)
             {
                 if (c != largerStr.ToCharArray()[shorterStr.IndexOf(c)])
@@ -91,7 +90,11 @@ namespace NpcItemFinder
             }
             amountDifferent += Math.Abs(str1.Length - str2.Length);
             return amountDifferent;
+        }
 
+        public static List<V> Flatten<K, V>(this Dictionary<K, List<V>> dict)
+        {
+            return dict.Values.SelectMany(list => list).ToList();
         }
     }
 }

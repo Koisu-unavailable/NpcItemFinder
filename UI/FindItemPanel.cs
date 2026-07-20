@@ -1,5 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
+using Humanizer;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
@@ -15,6 +20,14 @@ public class FindItemPanel : UIPanel
     // A flag that checks if the panel is currently being dragged
     private bool dragging;
     private SearchBar searchBar;
+    private UIText placeholderItemText;
+    private const int PLACEHOLDERITEMTEXTSCALE = 2;
+    private int page = 0;
+    private int maxPages = 1;
+    private List<Item> currentlyDisplaying;
+    private UIButton searchButton;
+
+    private const int ITEMCONTAINERXPAD = 5;
 
     public override void OnInitialize()
     {
@@ -22,14 +35,73 @@ public class FindItemPanel : UIPanel
         searchBar = new SearchBar();
         searchBar.Width.Set(Width.Pixels - SearchBar.xPad * 2, 0); // times 2 accounts for left/right pad
         searchBar.Left.Set(SearchBar.xPad, 0);
-        var textHeight = FontAssets.MouseText.Value.MeasureString(searchBar.hint).Y;
+        var textHeight = FontAssets.MouseText.Value.MeasureString(searchBar.hint).Y; // looked into source code for want the default font was
         searchBar.Height.Set(textHeight + SearchBar.hintYpad * 2, 0); // times two accounts for bottom and top padding
         searchBar.MarginBottom = SearchBar.yPad;
         searchBar.Top.Set(SearchBar.yPad, 0);
         Append(searchBar);
+        placeholderItemText = new UIText("Items will appear here", PLACEHOLDERITEMTEXTSCALE)
+        {
+            HAlign = 0.5f,
+            VAlign = 0.6f,
+            TextColor = Color.Gray
+        };
+        Append(placeholderItemText);
+        searchButton = new UIButton("Search", Search);
+        searchBar.Width.Set(
+            searchBar.Width.Pixels - searchButton.Width.Pixels - SearchBar.xPad,
+            searchBar.Width.Percent
+        );
+        searchButton.Top.Set(searchBar.Top.Pixels, searchBar.Top.Percent);
+        searchButton.Left.Set(
+            searchBar.Left.Pixels + searchBar.Width.Pixels + SearchBar.xPad,
+            searchBar.Left.Percent
+        );
+        searchBar.MarginRight = SearchBar.xPad;
+        Append(searchButton);
+    }
 
-        var item_container = new ItemContainer(new Item(ItemID.SoulofFlight));
-        Append(item_container);
+    private void Search(UIMouseEvent evt)
+    {
+        string query = searchBar.GetText();
+        RenderQuery(FindItem.SearchItem(query));
+    }
+
+    private void RenderQuery(Dictionary<string, List<Item>> queryResults)
+    {
+        List<Item> items = queryResults.Flatten();
+        Main.NewText(items.Count);
+        items.ForEach(i => Main.NewText($"[i:{i.type}]"));
+        int displayAmount = (int)(
+            Width.Pixels / (new ItemContainer(new Item()).Width.Pixels + ITEMCONTAINERXPAD * 2)
+        );
+        displayAmount = displayAmount > items.Count ? items.Count : displayAmount;
+        Main.NewText(displayAmount);
+        if (items.Count == 0)
+        {
+            placeholderItemText.SetText("No items found");
+            return;
+        }
+        else
+        {
+            placeholderItemText.SetText("");
+        }
+        for (int i = 0; i < displayAmount; i++)
+        {
+            var container = new ItemContainer(items[(page * displayAmount) + i])
+            {
+                VAlign = 0.5f,
+                HAlign = 0.5f
+            };
+            container.Left.Set(
+                i * (container.Width.Pixels + ITEMCONTAINERXPAD)
+                    - (Width.Pixels / 2f)
+                    + (container.Width.Pixels / 2f),
+                0.5f
+            );
+            Append(container);
+        }
+        Recalculate();
     }
 
     public override void LeftMouseDown(UIMouseEvent evt)
@@ -88,6 +160,8 @@ public class FindItemPanel : UIPanel
         {
             Left.Set(Main.mouseX - offset.X, 0f); // Main.MouseScreen.X and Main.mouseX are the same
             Top.Set(Main.mouseY - offset.Y, 0f);
+            Append(new ItemContainer(new Item(ItemID.SilverCoin)) { VAlign = 0.5f, HAlign = 0.5f });
+
             Recalculate();
         }
 

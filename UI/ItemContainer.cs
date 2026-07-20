@@ -20,49 +20,10 @@ namespace NpcItemFinder.UI
     public class ItemContainer(Item item) : UIPanel
     {
         private Item item = item;
-
-        Asset<Texture2D> texture;
-        private static Item[] allAvailbleItems; // static to save memory
-        private bool animated;
-        private DrawAnimation? drawAnimation;
-
         public override void OnInitialize()
         {
             base.OnInitialize();
-            // // does this once and shares across all instances
-            // if (allAvailbleItems.Length == 0)
-            // {
-            //     foreach (string key in NpcItemFinder.shops.Keys)
-            //     {
-            //         foreach (NPCShop.Entry entry in NpcItemFinder.shops[key].ActiveEntries)
-            //         {
-            //             allAvailbleItems = allAvailbleItems.Append(entry.Item).ToArray();
-            //         }
-            //     }
-            // }
             BorderColor = Color.Blue;
-            ModItem? modItem = item.ModItem;
-            if (modItem == null) // vanilla
-            {
-                Main.instance.LoadItem(item.type);
-                texture = TextureAssets.Item[item.type];
-            }
-            else
-            {
-                texture = ModContent.Request<Texture2D>(modItem.Texture);
-            }
-            drawAnimation = Main.itemAnimations[item.type];
-            animated = true;
-            if (drawAnimation == null)
-            {
-                animated = false;
-            }
-            if (animated) { }
-            else
-            {
-                Width.Set(50, 0);
-                Height.Set(50, 0);
-            }
             Width.Set(50, 0);
             Height.Set(50, 0);
             Recalculate();
@@ -118,11 +79,11 @@ namespace NpcItemFinder.UI
                     SpriteEffects.None,
                     0f
                 );
-                if (ContainsPoint(Main.MouseScreen))
-                {
-                    Main.HoverItem = item.Clone();
-                    Main.hoverItemName = item.Name;
-                }
+            }
+            if (ContainsPoint(Main.MouseScreen))
+            {
+                Main.HoverItem = item.Clone();
+                Main.hoverItemName = item.Name;
             }
         }
     }

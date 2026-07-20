@@ -63,7 +63,10 @@ public class SearchBar : UIPanel
             textElement.TextColor = Color.Gray;
         }
     }
-
+    public string GetText()
+    {
+        return textElement.Text;
+    }
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
         base.DrawSelf(spriteBatch);
