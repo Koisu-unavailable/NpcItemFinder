@@ -30,6 +30,8 @@ public class FindItemPanel : UIPanel
     private int displayAmount;
     private const int ITEMCONTAINERXPAD = 10; // eyeballed
 
+    private PageSelectorUIElement pageSelector;
+
     public override void OnInitialize()
     {
         base.OnInitialize();
@@ -74,6 +76,19 @@ public class FindItemPanel : UIPanel
             Append(container);
             currentlyDisplaying.Add(container.UniqueId);
         }
+        pageSelector = new PageSelectorUIElement(page, maxPages);
+        pageSelector.Width.Set(0, 0.5f);
+        pageSelector.Height.Set(0, 0.3f);
+        pageSelector.Top.Set(Height.Pixels - pageSelector.Height.Pixels - SearchBar.yPad, 0);
+        pageSelector.Left.Set(-pageSelector.Width.Pixels / 2, 0.5f);
+        pageSelector.OnPageChanged += (currentPage, maxPages) =>
+        {
+            page = currentPage;
+            this.maxPages = maxPages;
+            RenderQuery(FindItem.SearchItem(searchBar.GetText()));
+        };
+        
+        Append(pageSelector);
         Recalculate();
     }
 
