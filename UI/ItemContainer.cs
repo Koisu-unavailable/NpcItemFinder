@@ -54,12 +54,11 @@ namespace NpcItemFinder.UI
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            base.DrawSelf(spriteBatch);
+            ;
             CalculatedStyle dimensions = GetDimensions();
-            if (_item == null) return;
-
+            if (_item == null || _item.type == ItemID.None) return;
+            base.DrawSelf(spriteBatch);
             ModItem? modItem = _item.ModItem;
-            Main.instance.LoadItem(_item.type);
 
             Texture2D texture = TextureAssets.Item[_item.type].Value;
 
@@ -108,7 +107,6 @@ namespace NpcItemFinder.UI
             }
             if (ContainsPoint(Main.MouseScreen))
             {
-                Main.NewText("drawing item: " + _item.type);
                 Main.HoverItem = _item.Clone();
                 Main.hoverItemName = _item.Name;
             }

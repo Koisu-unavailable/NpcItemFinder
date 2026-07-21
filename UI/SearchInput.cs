@@ -62,6 +62,7 @@ public class SearchBar : UIPanel
         {
             textElement.SetText(hint);
             textElement.TextColor = Color.Gray;
+            blinker.Left.Set(0, 0);
         }
     }
     public string GetText()

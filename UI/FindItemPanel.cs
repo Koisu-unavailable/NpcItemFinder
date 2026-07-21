@@ -33,7 +33,7 @@ public class FindItemPanel : UIPanel
     public override void OnInitialize()
     {
         base.OnInitialize();
-        BackgroundColor = Color.SkyBlue ;
+        BackgroundColor = Color.SkyBlue;
         searchBar = new SearchBar();
         searchBar.Width.Set(Width.Pixels - SearchBar.xPad * 2, 0); // times 2 accounts for left/right pad
         searchBar.Left.Set(SearchBar.xPad, 0);
@@ -71,9 +71,7 @@ public class FindItemPanel : UIPanel
             {
                 VAlign = 0.6f,
             };
-            
             container.MarginLeft = container.MarginRight = ITEMCONTAINERXPAD;
-            container.Left.Set(i * (Width.Pixels / displayAmount), 0);
             Append(container);
             currentlyDisplaying.Add(container.UniqueId);
         }
@@ -90,8 +88,14 @@ public class FindItemPanel : UIPanel
     private void RenderQuery(Dictionary<string, List<Item>> queryResults)
     {
         List<Item> items = queryResults.Flatten();
-        Main.NewText(items.Count);
-        items.ForEach(i => Main.NewText($"[i:{i.type}]"));
+        var containers = Children.OfType<ItemContainer>();
+        containers.ToList().ForEach(c =>
+        {
+            c.Item = new Item();
+            c.Left.Set(Array.IndexOf(containers.ToArray(), c) * (Width.Pixels / displayAmount), 0);
+        }
+        );
+
         if (items.Count == 0)
         {
             placeholderItemText.SetText("No items found");
@@ -101,7 +105,7 @@ public class FindItemPanel : UIPanel
         {
             placeholderItemText.SetText("");
         }
-        var containers = Children.OfType<ItemContainer>();
+        int index = 0;
         for (int i = 0; i < displayAmount; i++)
         {
             int itemIndex = (page * displayAmount) + i;
@@ -110,6 +114,21 @@ public class FindItemPanel : UIPanel
                 // should attempt to reposition containers to be centered 
                 break;
             }
+            if (displayAmount > items.Count)
+            {
+                if ((i+1) % 2 == 0)
+                {
+                    index += 2;
+                }
+                else
+                {
+                    index += 1;
+                }
+                containers.ElementAt(i).Left.Set(0, (1 / ((float)items.Count)) / 2 * (index + 1)); 
+                // fucaksss implicit integer division, need to cast to float
+                
+            }
+
             containers.ElementAt(i).Item = items[itemIndex];
         }
         Recalculate();
@@ -170,7 +189,6 @@ public class FindItemPanel : UIPanel
         {
             Left.Set(Main.mouseX - offset.X, 0f); // Main.MouseScreen.X and Main.mouseX are the same
             Top.Set(Main.mouseY - offset.Y, 0f);
-            Append(new ItemContainer(new Item(ItemID.SilverCoin)) { VAlign = 0.5f, HAlign = 0.5f });
 
             Recalculate();
         }

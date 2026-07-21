@@ -34,7 +34,7 @@ public class Blinker(string oldText) : UIElement
         var difference =
             FontAssets.MouseText.Value.MeasureString(newText).X
             - FontAssets.MouseText.Value.MeasureString(oldText).X;
-        blinker.Left.Set(blinker.Left.Pixels + difference, 0); // the 1 is for extra spacing for wide characters, probably will fix that
+        blinker.Left.Set(blinker.Left.Pixels + difference, 0); 
         oldText = newText;
         Recalculate();
     }
