@@ -93,6 +93,7 @@ public class FindItemPanel : UIPanel
         {
             c.Item = new Item();
             c.Left.Set(Array.IndexOf(containers.ToArray(), c) * (Width.Pixels / displayAmount), 0);
+            c.MarginLeft = c.MarginRight = ITEMCONTAINERXPAD;
         }
         );
 
@@ -105,7 +106,6 @@ public class FindItemPanel : UIPanel
         {
             placeholderItemText.SetText("");
         }
-        int index = 0;
         for (int i = 0; i < displayAmount; i++)
         {
             int itemIndex = (page * displayAmount) + i;
@@ -114,22 +114,33 @@ public class FindItemPanel : UIPanel
                 // should attempt to reposition containers to be centered 
                 break;
             }
-            if (displayAmount > items.Count)
+            containers.ElementAt(i).Item = items[itemIndex];
+        }
+        // recenter the containers if there are less than displayAmount items
+        var enumerated_containers = containers.GetEnumerator();
+        if (displayAmount > items.Count)
+        {
+            int spaces = (int)Math.Round(Math.Pow((1 / ((float)items.Count)) / 2, -1), 1);
+            Main.NewText($"spaces: {spaces}");
+            int i = 0;
+            while (i <= spaces)
             {
-                if ((i+1) % 2 == 0)
+                Main.NewText($"i: {i}");
+                if (i % 2 != 0)
                 {
-                    index += 2;
+
+                    enumerated_containers.MoveNext();
+                    Main.NewText($"enumerated_containers.MoveNext(): {enumerated_containers.Current.Item.Name} is being drawn at position {(float)(i / (float)spaces)}");
+                    enumerated_containers.Current.Left.Set(-enumerated_containers.Current.Width.Pixels / 2, (float)(i / (float)spaces));
+                    enumerated_containers.Current.MarginLeft = enumerated_containers.Current.MarginRight = 0;
+                    i++;
                 }
                 else
                 {
-                    index += 1;
+                    i++;
+                    continue;
                 }
-                containers.ElementAt(i).Left.Set(0, (1 / ((float)items.Count)) / 2 * (index + 1)); 
-                // fucaksss implicit integer division, need to cast to float
-                
             }
-
-            containers.ElementAt(i).Item = items[itemIndex];
         }
         Recalculate();
     }
