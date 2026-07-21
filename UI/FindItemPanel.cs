@@ -33,7 +33,6 @@ public class FindItemPanel : UIPanel
     public override void OnInitialize()
     {
         base.OnInitialize();
-        BackgroundColor = Color.SkyBlue;
         searchBar = new SearchBar();
         searchBar.Width.Set(Width.Pixels - SearchBar.xPad * 2, 0); // times 2 accounts for left/right pad
         searchBar.Left.Set(SearchBar.xPad, 0);
@@ -121,16 +120,13 @@ public class FindItemPanel : UIPanel
         if (displayAmount > items.Count)
         {
             int spaces = (int)Math.Round(Math.Pow((1 / ((float)items.Count)) / 2, -1), 1);
-            Main.NewText($"spaces: {spaces}");
             int i = 0;
             while (i <= spaces)
             {
-                Main.NewText($"i: {i}");
                 if (i % 2 != 0)
                 {
-
                     enumerated_containers.MoveNext();
-                    Main.NewText($"enumerated_containers.MoveNext(): {enumerated_containers.Current.Item.Name} is being drawn at position {(float)(i / (float)spaces)}");
+                    // Main.NewText($"enumerated_containers.MoveNext(): {enumerated_containers.Current.Item.Name} is being drawn at position {(float)(i / (float)spaces)}");
                     enumerated_containers.Current.Left.Set(-enumerated_containers.Current.Width.Pixels / 2, (float)(i / (float)spaces));
                     enumerated_containers.Current.MarginLeft = enumerated_containers.Current.MarginRight = 0;
                     i++;

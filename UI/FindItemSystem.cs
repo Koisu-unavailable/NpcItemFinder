@@ -9,8 +9,6 @@ namespace NpcItemFinder.UI
     [Autoload(Side = ModSide.Client)]
     public class FindItemUiSystem : ModSystem
     {
-        public static ModKeybind OpenFindUi { get; private set; }
-
         internal FindItemState findItemState;
         private UserInterface _findItemState;
 
@@ -20,7 +18,18 @@ namespace NpcItemFinder.UI
             findItemState.Activate();
             _findItemState = new UserInterface();
             _findItemState.SetState(findItemState);
-            OpenFindUi = KeybindLoader.RegisterKeybind(Mod, "OpenFindUi", "G");
+        }
+
+        public void ToggleVisible()
+        {
+            if (_findItemState.CurrentState == null)
+            {
+                _findItemState.SetState(findItemState);
+            }
+            else
+            {
+                _findItemState.SetState(null);
+            }
         }
 
         public override void UpdateUI(GameTime gameTime)
@@ -49,10 +58,10 @@ namespace NpcItemFinder.UI
                 );
             }
         }
-
-        public override void Unload()
+        public override void OnWorldLoad()
         {
-            OpenFindUi = null;
+            base.OnWorldLoad();
+            ToggleVisible(); // toggle visibilty of the UI when the world loads
         }
     }
 }
