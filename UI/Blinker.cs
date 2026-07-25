@@ -13,7 +13,7 @@ public class Blinker(string oldText) : UIElement
     public override void OnInitialize()
     {
         base.OnInitialize();
-        blinker = new UIText("|", 1f); // different fonts could mess this up
+        blinker = new UIText("|", 1f); // different fonts could mess this up, oh well
         Append(blinker);
     }
 
@@ -34,7 +34,7 @@ public class Blinker(string oldText) : UIElement
         var difference =
             FontAssets.MouseText.Value.MeasureString(newText).X
             - FontAssets.MouseText.Value.MeasureString(oldText).X;
-        blinker.Left.Set(blinker.Left.Pixels + difference, 0); 
+        blinker.Left.Set(blinker.Left.Pixels + difference + FontAssets.MouseText.Value.MeasureString("|").X, 0); 
         oldText = newText;
         Recalculate();
     }

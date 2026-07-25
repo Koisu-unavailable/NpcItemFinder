@@ -37,10 +37,11 @@ public class SearchBar : UIPanel
             VAlign = 0.5f,
         };
         Append(textElement);
-        blinker = new Blinker("");
-        OnTextUpdate += blinker.OnTextChange;
-        Append(blinker);
+        // // blinker = new Blinker("");
+        // OnTextUpdate += blinker.OnTextChange;
+        // Append(blinker);
         OnLeftClick += OnClick;
+        
     }
 
     private void OnClick(UIMouseEvent evt, UIElement listeningElement)
