@@ -92,6 +92,11 @@ public class FindItemPanel : UIPanel
     {
         string query = searchBar.GetText();
         var items = FindItem.SearchItem(query).Flatten();
+        pageSelector.UpdatePage(0);
+        if (items.Count == 0)
+        {
+            pageSelector.UpdatePage(-1);
+        }
         pageSelector.UpdatePage(page, (int)Math.Ceiling(items.Count / (double)displayAmount));
         RenderQuery(items);
     }
