@@ -1,4 +1,5 @@
 using System;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
@@ -21,7 +22,11 @@ public class PageSelectorUIElement : UIElement
     {
         base.OnInitialize();
         
-        pageText = new UIText($"Page {currentPage + 1} of {maxPages}");
+        pageText = new UIText($"Page {currentPage + 1} of {maxPages}")
+        {
+            HAlign = 0.5f,
+            VAlign = 0.5f,
+        };
         nextButton = new UIButton("Next", (evt) =>
         {
             if (currentPage < maxPages - 1)
@@ -38,14 +43,30 @@ public class PageSelectorUIElement : UIElement
                 UpdatePage(currentPage);
             }
         });
-        // Positioning the buttons and text
-        previousButton.Left.Set(0, 1 / 3);
-        pageText.Left.Set(0, 2 / 3);
-        nextButton.Left.Set(0, 1);
+        Height.Set(nextButton.Height.Pixels, 0);
+
+        previousButton.HAlign = 0f;
+        previousButton.Left.Set(0f, 0f);
+        previousButton.VAlign = 0.5f;
+        pageText.Left.Set(0f, 0f);
+        nextButton.HAlign = 1f;
+        nextButton.Left.Set(0f, 0f);
+        nextButton.VAlign = 0.5f;
+
         Append(pageText);
         Append(nextButton);
         Append(previousButton);
 
+        UpdateLayout();
+    }
+
+    private void UpdateLayout()
+    {
+        float textWidth = FontAssets.MouseText.Value.MeasureString(pageText.Text).X;
+        Width.Set(
+            previousButton.Width.Pixels + nextButton.Width.Pixels + textWidth + 16f,
+            0f
+        );
         Recalculate();
     }
 
@@ -55,6 +76,7 @@ public class PageSelectorUIElement : UIElement
         currentPage = newCurrentPage;
         maxPages = newMaxPages;
         pageText.SetText($"Page {currentPage + 1} of {maxPages}");
+        UpdateLayout();
         OnPageChanged?.Invoke(currentPage, maxPages);
     }
     public void UpdatePage(int newCurrentPage)

@@ -13,12 +13,12 @@ namespace NpcItemFinder.UI
         {
             findItemPanel = new FindItemPanel();
 
-            Append(findItemPanel);
             findItemPanel.SetPadding(0);
             findItemPanel.Width.Set(500f, 0);
             findItemPanel.Height.Set(200f, 0);
             findItemPanel.HAlign = 0.5f;
             findItemPanel.VAlign = 0.3f;
+            Append(findItemPanel);
         }
     }
 }

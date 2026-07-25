@@ -36,12 +36,20 @@ public class FindItemPanel : UIPanel
     {
         base.OnInitialize();
         searchBar = new SearchBar();
-        searchBar.Width.Set(Width.Pixels - SearchBar.xPad * 2, 0); // times 2 accounts for left/right pad
         searchBar.Left.Set(SearchBar.xPad, 0);
         var textHeight = FontAssets.MouseText.Value.MeasureString(searchBar.hint).Y; // looked into source code for want the default font was
         searchBar.Height.Set(textHeight + SearchBar.hintYpad * 2, 0); // times two accounts for bottom and top padding
-        searchBar.MarginBottom = SearchBar.yPad;
         searchBar.Top.Set(SearchBar.yPad, 0);
+        searchBar.MarginBottom = SearchBar.yPad;
+
+        searchButton = new UIButton("Search", Search);
+        searchButton.Top.Set(searchBar.Top.Pixels, searchBar.Top.Percent);
+        searchButton.HAlign = 1f;
+        searchButton.Left.Set(-SearchBar.xPad, 0f);
+        Append(searchButton);
+
+        searchBar.Width.Set(-SearchBar.xPad * 2 - searchButton.Width.Pixels, 1f);
+        searchBar.MarginRight = SearchBar.xPad;
         Append(searchBar);
         placeholderItemText = new UIText("Items will appear here", PLACEHOLDERITEMTEXTSCALE)
         {
@@ -50,18 +58,6 @@ public class FindItemPanel : UIPanel
             TextColor = Color.Gray
         };
         Append(placeholderItemText);
-        searchButton = new UIButton("Search", Search);
-        searchBar.Width.Set(
-            searchBar.Width.Pixels - searchButton.Width.Pixels - SearchBar.xPad,
-            searchBar.Width.Percent
-        );
-        searchButton.Top.Set(searchBar.Top.Pixels, searchBar.Top.Percent);
-        searchButton.Left.Set(
-            searchBar.Left.Pixels + searchBar.Width.Pixels + SearchBar.xPad,
-            searchBar.Left.Percent
-        );
-        searchBar.MarginRight = SearchBar.xPad;
-        Append(searchButton);
         displayAmount = (int)(
             Width.Pixels / (ItemContainer.WIDTH + ITEMCONTAINERXPAD * 2)
         );
@@ -77,15 +73,14 @@ public class FindItemPanel : UIPanel
             currentlyDisplaying.Add(container.UniqueId);
         }
         pageSelector = new PageSelectorUIElement(page, maxPages);
-        pageSelector.Width.Set(0, 0.5f);
-        pageSelector.Height.Set(0, 0.3f);
-        pageSelector.Top.Set(Height.Pixels - pageSelector.Height.Pixels - SearchBar.yPad, 0);
-        pageSelector.Left.Set(-pageSelector.Width.Pixels / 2, 0.5f);
+        pageSelector.Top.Set(Height.Pixels - pageSelector.Height.Pixels - (int)(SearchBar.yPad * 2.5), 0);
+        pageSelector.HAlign = 0.5f;
+        pageSelector.Left.Set(0f, 0f);
         pageSelector.OnPageChanged += (currentPage, maxPages) =>
         {
             page = currentPage;
             this.maxPages = maxPages;
-            RenderQuery(FindItem.SearchItem(searchBar.GetText()));
+            RenderQuery(FindItem.SearchItem(searchBar.GetText()).Flatten());
         };
         
         Append(pageSelector);
@@ -96,12 +91,14 @@ public class FindItemPanel : UIPanel
     private void Search(UIMouseEvent evt)
     {
         string query = searchBar.GetText();
-        RenderQuery(FindItem.SearchItem(query));
+        var items = FindItem.SearchItem(query).Flatten();
+        pageSelector.UpdatePage(page, (int)Math.Ceiling(items.Count / (double)displayAmount));
+        RenderQuery(items);
     }
 
-    private void RenderQuery(Dictionary<string, List<Item>> queryResults)
+    private void RenderQuery(List<Item> queryResults)
     {
-        List<Item> items = queryResults.Flatten();
+        var items = queryResults;
         var containers = Children.OfType<ItemContainer>();
         containers.ToList().ForEach(c =>
         {
@@ -120,6 +117,7 @@ public class FindItemPanel : UIPanel
         {
             placeholderItemText.SetText("");
         }
+        
         for (int i = 0; i < displayAmount; i++)
         {
             int itemIndex = (page * displayAmount) + i;
@@ -134,6 +132,7 @@ public class FindItemPanel : UIPanel
         var enumerated_containers = containers.GetEnumerator();
         if (displayAmount > items.Count)
         {
+            // example: 3 items would make 6 spaces, and we place them on every other space
             int spaces = (int)Math.Round(Math.Pow((1 / ((float)items.Count)) / 2, -1), 1);
             int i = 0;
             while (i <= spaces)
@@ -141,7 +140,7 @@ public class FindItemPanel : UIPanel
                 if (i % 2 != 0)
                 {
                     enumerated_containers.MoveNext();
-                    // Main.NewText($"enumerated_containers.MoveNext(): {enumerated_containers.Current.Item.Name} is being drawn at position {(float)(i / (float)spaces)}");
+                    
                     enumerated_containers.Current.Left.Set(-enumerated_containers.Current.Width.Pixels / 2, (float)(i / (float)spaces));
                     enumerated_containers.Current.MarginLeft = enumerated_containers.Current.MarginRight = 0;
                     i++;

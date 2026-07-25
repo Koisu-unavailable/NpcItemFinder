@@ -29,7 +29,6 @@ namespace NpcItemFinder.UI
                 if (_item != null)
                 {
                     Main.instance.LoadItem(_item.type);
-                    Main.NewText(_item.type);
                 }
             }
         }
@@ -54,7 +53,6 @@ namespace NpcItemFinder.UI
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            ;
             CalculatedStyle dimensions = GetDimensions();
             if (_item == null || _item.type == ItemID.None) return;
             base.DrawSelf(spriteBatch);
