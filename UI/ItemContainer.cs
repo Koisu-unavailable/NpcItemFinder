@@ -50,7 +50,7 @@ namespace NpcItemFinder.UI
             Recalculate();
             Main.instance.LoadItem(_item.type);
         }
-
+        #nullable enable
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             CalculatedStyle dimensions = GetDimensions();
