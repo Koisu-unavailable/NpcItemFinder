@@ -99,7 +99,7 @@ namespace NpcItemFinder.UI
                     0f
                 );
             }
-            ItemLoader.PostDrawInInventory(_item, spriteBatch, drawPos, frame, Color.White, Color.White, frame.Size() / 2, scale);
+            ItemLoader.PostDrawInInventory(_item, spriteBatch, drawPos, frame, Color.White, Color.White, frame.Size() / 2f, scale);
 
             if (ContainsPoint(Main.MouseScreen))
             {
