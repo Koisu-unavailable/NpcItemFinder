@@ -3,7 +3,9 @@
 This is a mod to help find items that NPCS sell.
 
 
-Doing /findItem [item] will try to find which NPC sells the item. You use the OpenCommand keybind to automatically OpenChat with "/findItem" in it.
+Doing /findItem [item] will try to find which NPC sells the item. You use the OpenCommand keybind to automatically open chat with "/findItem" in it.
+[h2]New[/h2]
+You can also use the Open Ui keybind (defaults to G) to open the UI to search for items
 This also supports the [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3418974288&searchtext=npc+finder] NPC Finder [/url] mod made by [url=https://steamcommunity.com/id/erky1952] Erky [/url]. If your results belong to only one npc, an arrow will appear pointing to that npc.
 [h2]Examples: [/h2]
 [list]

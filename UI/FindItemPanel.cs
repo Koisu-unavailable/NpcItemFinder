@@ -49,7 +49,7 @@ public class FindItemPanel : UIPanel
         Append(searchButton);
 
         searchBar.Width.Set(-SearchBar.xPad * 2 - searchButton.Width.Pixels, 1f);
-        searchBar.MarginRight = SearchBar.xPad;
+        searchBar.Left.Set(searchBar.Left.Pixels - SearchBar.xPad / 2f, searchBar.Left.Percent);
         Append(searchBar);
         placeholderItemText = new UIText("Items will appear here", PLACEHOLDERITEMTEXTSCALE)
         {
