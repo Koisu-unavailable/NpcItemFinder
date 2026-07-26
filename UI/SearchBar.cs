@@ -15,7 +15,7 @@ public class SearchBar : UIPanel
     public readonly string hint = "Copper Shortsword"; // TODO: add localization
 
     private UIText textElement;
-    private Blinker blinker;
+    // private Blinker blinker;
     public const int xPad = 40;
     public const int yPad = 20;
     public const int hintYpad = 4;
@@ -63,7 +63,7 @@ public class SearchBar : UIPanel
         {
             textElement.SetText(hint);
             textElement.TextColor = Color.Gray;
-            blinker.Left.Set(0, 0);
+            // blinker.Left.Set(0, 0);
         }
     }
     public string GetText()

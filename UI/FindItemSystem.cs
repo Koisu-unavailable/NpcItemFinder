@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -61,7 +62,10 @@ namespace NpcItemFinder.UI
         public override void OnWorldLoad()
         {
             base.OnWorldLoad();
-            ToggleVisible(); // toggle visibilty of the UI when the world loads
+            if (_findItemState.CurrentState != null)
+            {
+                ToggleVisible(); // toggle visibilty of the UI when the world loads
+            } 
         }
     }
 }
