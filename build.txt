@@ -1,4 +1,4 @@
-displayName = Npc item finder
+displayName = Who Sells This?
 author = real yuuko
 version = 0.3.0.1
 
