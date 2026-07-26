@@ -76,9 +76,7 @@ namespace NpcItemFinder.UI
             Vector2 drawPos =
                 dimensions.Position() + new Vector2(Width.Pixels / 2f, Height.Pixels / 2f);
             bool drawSprite = true;
-            if (modItem != null)
-            {
-                drawSprite = ItemLoader.PreDrawInInventory(
+            drawSprite = ItemLoader.PreDrawInInventory(
                     modItem.Item,
                     spriteBatch,
                     drawPos,
@@ -88,7 +86,6 @@ namespace NpcItemFinder.UI
                     dimensions.Center(),
                     scale
                 );
-            }
             if (drawSprite)
             {
                 spriteBatch.Draw(
@@ -97,12 +94,14 @@ namespace NpcItemFinder.UI
                     frame,
                     Color.White,
                     0f,
-                    frame.Size() / 2f,
+                    dimensions.Center(),
                     scale,
                     SpriteEffects.None,
                     0f
                 );
             }
+            ItemLoader.PostDrawInInventory(_item, spriteBatch, drawPos, frame, Color.White, Color.White, dimensions.Center(), scale);
+            
             if (ContainsPoint(Main.MouseScreen))
             {
                 Main.HoverItem = _item.Clone();
