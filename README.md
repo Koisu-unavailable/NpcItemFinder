@@ -1,4 +1,4 @@
-# Npc Item Finder
+# Who Sells this?
 ## A mod find which NPC sells what
 
 # Usage:
