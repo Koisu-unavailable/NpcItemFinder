@@ -2,12 +2,12 @@ Mods: {
 	NpcItemFinder: {
 		Configs: {
 			NpcItemFinderConfig: {
-				DisplayName: Npc Item Finder Config
-				Headers.findItemHeader: find Item Header Header
+				DisplayName: Who Sells this? Config
+				Headers.findItemHeader: /findItem
 
 				ItemDisplayLimit: {
 					Label: Item Display Limit
-					Tooltip: ""
+					Tooltip: "Amount of items that will be displayed using the /findItem command"
 				}
 			}
 		}
