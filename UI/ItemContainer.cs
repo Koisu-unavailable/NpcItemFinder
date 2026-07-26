@@ -50,11 +50,11 @@ namespace NpcItemFinder.UI
             Recalculate();
             Main.instance.LoadItem(_item.type);
         }
-        #nullable enable
+#nullable enable
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            CalculatedStyle dimensions = GetDimensions();
             if (_item == null || _item.type == ItemID.None) return;
+            CalculatedStyle dimensions = GetDimensions();
             base.DrawSelf(spriteBatch);
             ModItem? modItem = _item.ModItem;
 
@@ -70,23 +70,22 @@ namespace NpcItemFinder.UI
             float scale = Math.Min(
                 Width.Pixels / ((float)frame.Width + 10),
                 Height.Pixels / ((float)frame.Height + 10)
-                // +10 for padding
+            // +10 for padding
             );
 
-            Vector2 drawPos =
-                dimensions.Position() + new Vector2(Width.Pixels / 2f, Height.Pixels / 2f);
-            bool drawSprite = true;
-            drawSprite = ItemLoader.PreDrawInInventory(
-                    modItem.Item,
-                    spriteBatch,
-                    drawPos,
-                    dimensions.ToRectangle(),
-                    Color.White,
-                    Color.White,
-                    dimensions.Center(),
-                    scale
-                );
-            if (drawSprite)
+            Vector2 drawPos = dimensions.Center();
+            // Pass the item's source frame to the hook and the correct origin (frame center).
+            bool drawSprite = ItemLoader.PreDrawInInventory(
+                _item,
+                spriteBatch,
+                drawPos,
+                frame,
+                Color.White,
+                Color.White,
+                frame.Size() / 2f,
+                scale
+            );
+            if (drawSprite || modItem == null)
             {
                 spriteBatch.Draw(
                     texture,
@@ -94,14 +93,14 @@ namespace NpcItemFinder.UI
                     frame,
                     Color.White,
                     0f,
-                    dimensions.Center(),
+                    frame.Size() / 2f,
                     scale,
                     SpriteEffects.None,
                     0f
                 );
             }
-            ItemLoader.PostDrawInInventory(_item, spriteBatch, drawPos, frame, Color.White, Color.White, dimensions.Center(), scale);
-            
+            ItemLoader.PostDrawInInventory(_item, spriteBatch, drawPos, frame, Color.White, Color.White, frame.Size() / 2, scale);
+
             if (ContainsPoint(Main.MouseScreen))
             {
                 Main.HoverItem = _item.Clone();
