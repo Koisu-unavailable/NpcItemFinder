@@ -51,7 +51,10 @@ public class SearchBar : UIPanel
 
     private void Focus()
     {
+        
         focused = true;
+        
+        Main.blockInput = true;
         textElement.SetText("");
         textElement.TextColor = Color.White;
     }
@@ -59,6 +62,8 @@ public class SearchBar : UIPanel
     private void Unfocus(bool clear)
     {
         focused = false;
+        Main.blockInput = false;
+        PlayerInput.WritingText = false;
         if (clear)
         {
             textElement.SetText(hint);

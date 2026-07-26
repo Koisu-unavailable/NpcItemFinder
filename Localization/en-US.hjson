@@ -7,7 +7,7 @@ Mods: {
 
 				ItemDisplayLimit: {
 					Label: Item Display Limit
-					Tooltip: "Amount of items that will be displayed using the /findItem command"
+					Tooltip: Amount of items that will be displayed using the /findItem command
 				}
 			}
 		}
